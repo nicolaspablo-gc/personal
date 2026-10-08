@@ -1,0 +1,7 @@
+* Personal -- Mi repo personal
+
+Un repo que contiene mi entorno computacional en un solo lugar, para
+usar y replicar en varios dispositivos.
+
+Todo lo que son archivos de medios se maneja aparte, en alternativas
+de sincronización basadas en la nube.

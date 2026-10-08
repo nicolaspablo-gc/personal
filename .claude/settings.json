@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(/docs/**)",
+      "Edit(/docs/**)",
+      "Bash(gpg *)",
+      "Bash(gpg2 *)"
+    ]
+  }
+}
