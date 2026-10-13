@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-export PERSONAL_DIR=$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")
+source "$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")/rc"
 
-"${PERSONAL_DIR}"/config/setup
-"${PERSONAL_DIR}"/emacs/setup
+"${MY_PERSONAL_DIR}"/config/setup
+"${MY_PERSONAL_DIR}"/emacs/setup

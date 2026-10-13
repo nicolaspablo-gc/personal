@@ -1,0 +1,6 @@
+#! /bin/bash
+export MY_PERSONAL_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
+export MY_PERSONAL_CONFIG_DIR="$MY_PERSONAL_DIR/config"
+export MY_PERSONAL_EMACS_DIR="$MY_PERSONAL_DIR/emacs"
+export MY_MAIN_EMACS_DIR="$HOME/emacs"
+export MY_MAIN_CONFIG_DIR="$HOME/config"

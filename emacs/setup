@@ -2,19 +2,19 @@
 
 set -euo pipefail
 
-: ${PERSONAL_DIR:?PERSONAL_DIR is not set}
-cd "$PERSONAL_DIR/emacs"
+source "$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")/rc"
 
 # clone public repo
 
-if ! [ -d public ]; then
-    git clone https://github.com/nicolaspablo-gc/emacs public
+if ! [ -d "$MY_MAIN_EMACS_DIR" ]; then
+    git clone https://github.com/nicolaspablo-gc/emacs "$MY_MAIN_EMACS_DIR"
 fi
 
 # symlink/bootstrap emacs
 
-emacsd=~/.config/emacs
+CONFIG_EMACS_DIR=~/.config/emacs
 
-mkdir -p "$emacsd"
-ln -sf "$PWD"/init.el "$emacsd"
-ln -sf "$PWD"/early-init.el "$emacsd"
+mkdir -p "$CONFIG_EMACS_DIR"
+ln -sf "$MY_PERSONAL_EMACS_DIR"/personal-init.el "$CONFIG_EMACS_DIR/init.el"
+ln -sf "$MY_PERSONAL_EMACS_DIR"/personal-early-init.el "$CONFIG_EMACS_DIR/early-init.el"
+ln -sf "$MY_PERSONAL_EMACS_DIR"/abbrev_defs "$CONFIG_EMACS_DIR/abbrev_defs"

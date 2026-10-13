@@ -2,18 +2,19 @@
 
 set -euo pipefail
 
-: ${PERSONAL_DIR:?PERSONAL_DIR is not set}
-cd "$PERSONAL_DIR/config"
+source "$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")/rc"
 
 # clone public repo
 
-if ! [ -d public ]; then
-    git clone https://github.com/nicolaspablo-gc/config public
+if ! [ -d "$MY_MAIN_CONFIG_DIR" ]; then
+    git clone https://github.com/nicolaspablo-gc/config "$MY_MAIN_CONFIG_DIR"
 fi
 
 # boostrap (stow + symlinks) config
 
-ln -sf "$PWD/dot-bashrc" "$HOME/.bashrc"
+cd "$MY_MAIN_CONFIG_DIR"
+stow --dotfiles --no-folding --target="$HOME" --ignore=^dot-bashrc --ignore=^dot-profile .
 
-cd public
-stow --dotfiles --no-folding --target="$HOME" --ignore=^dot-bashrc .
+cd "$MY_PERSONAL_CONFIG_DIR"
+stow --dotfiles --no-folding --target="$HOME" --ignore=^.password-store .
+ln -sf "$MY_PERSONAL_CONFIG_DIR/dot-password-store" "$HOME/.password-store"

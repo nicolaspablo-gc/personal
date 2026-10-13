@@ -1,0 +1,7 @@
+#! /bin/bash
+
+source "$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")/rc"
+
+if [ -f  "$MY_MAIN_CONFIG_DIR/dot-profile" ]; then
+    source "$MY_MAIN_CONFIG_DIR/dot-profile"
+fi

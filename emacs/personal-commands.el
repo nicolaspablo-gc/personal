@@ -30,37 +30,59 @@
 (defvar personal-agenda-file (concat personal-directory "docs/agenda.org.gpg")
   "File to add agenda (scheduled) entries.")
 
-(defun personal-org-add-time-entry (file &optional current-date-time)
-  "Add a time entry at the end of org file FILE.
-Don't prompt for time and use current date+time when CURRENT-DATE-TIME
-is non-nil."
-  (with-current-buffer (find-file-noselect file)
+(defvar personal-tasks-file (concat personal-directory "docs/tareas.org.gpg")
+  "File to task entries.")
+
+(defun personal--time-stamp (&optional read-interactively inactive)
+  "Get an org timestamp string.
+If READ-INTERACTIVELY is non-nil, the user will be prompted for a time
+string.  If INACTIVE is non-nil, the timestamp will be created as an
+inactive one."
+  (with-temp-buffer
+    (if read-interactively
+        (org-time-stamp t inactive)
+      (org-insert-time-stamp nil t inactive))))
+
+(defun personal--read-string (prompt)
+  "Reads a string with my defaults."
+  (with-temp-buffer
     (set-input-method "spanish-prefix")
-    (end-of-buffer)
-    (insert
-     (format "* %s %s\n"
-             (with-temp-buffer
-               ;; Don't create inactive timestamps.  Active timestamps
-               ;; have the ability to show up in your agenda.  Its
-               ;; very useful to see at a glance all the things you
-               ;; did on x date.
-               (if current-date-time
-                   (org-insert-time-stamp nil :with-hm)
-                 (org-time-stamp t)))
-             (read-string "Log: " nil nil nil t)))
-    (org-set-tags-command)
-    (save-buffer)))
+    (read-string prompt nil nil nil t)))
+
+(defmacro personal--with-file (file &rest forms)
+  "Execute FORMS within FILE's buffer."
+  (declare (indent defun))
+  `(with-current-buffer (find-file-noselect ,file)
+     ,@forms))
 
 (defun personal-add-log (&optional prompt-date)
   "Add a log entry to `personal-log-file'."
-  (interactive "P")                     ;
-  (personal-org-add-time-entry personal-log-file (not prompt-date)))
+  (interactive "P")
+  (personal--with-file personal-log-file
+    (end-of-buffer)
+    (insert
+     (format "* %s %s\n"
+             (personal--time-stamp prompt-date)
+             (personal--read-string "Log: ")))
+    (org-set-tags-command)
+    (save-buffer)))
 
-(defun personal-add-agenda ()
-  "Add an agenda entry to `personal-agenda-file'"
+;; (defun personal-add-agenda-entry ()
+;;   "Add an agenda entry to `personal-agenda-file'"
+;;   (interactive)
+;;   (personal-org-add-time-entry personal-agenda-file))
+
+(defun personal-add-task ()
   (interactive)
-  (personal-org-add-time-entry personal-agenda-file))
+  (personal--with-file personal-tasks-file
+    (end-of-buffer)
+    (insert
+     (format "* HACER %s\n" (personal--read-string "Task: ")))))
 
+(defun personal-project-list ()
+  "List of personal projects."
+  (interactive)
+  (org-tags-view nil "CATEGORY=\"proyecto\""))
 
 (provide 'personal-commands)
 ;;; personal-commands.el ends here
