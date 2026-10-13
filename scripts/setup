@@ -1,0 +1,8 @@
+#! /bin/bash
+
+set -euo pipefail
+
+export PERSONAL_DIR=$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")
+
+"${PERSONAL_DIR}"/config/setup
+"${PERSONAL_DIR}"/emacs/setup

@@ -1,0 +1,19 @@
+#! /bin/bash
+
+set -euo pipefail
+
+: ${PERSONAL_DIR:?PERSONAL_DIR is not set}
+cd "$PERSONAL_DIR/config"
+
+# clone public repo
+
+if ! [ -d public ]; then
+    git clone https://github.com/nicolaspablo-gc/config public
+fi
+
+# boostrap (stow + symlinks) config
+
+ln -sf "$PWD/dot-bashrc" "$HOME/.bashrc"
+
+cd public
+stow --dotfiles --no-folding --target="$HOME" --ignore=^dot-bashrc .

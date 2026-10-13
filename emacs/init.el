@@ -1,7 +1,7 @@
-(defvar personal-emacs-directory (file-name-directory (or load-file-name (buffer-file-name)))
-  "Directory for my personal emacs settings.")
+(let ((public-init (concat personal-emacs-directory "public/init.el")))
+  (when (file-exists-p public-init)
+    (load public-init)))
 
-(add-to-list 'load-path personal-emacs-directory)
 (require 'personal-defs)
 (require 'personal-settings)
 (require 'personal-commands)

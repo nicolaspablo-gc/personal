@@ -1,0 +1,8 @@
+#! /bin/bash
+PERSONAL_DIR=$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")
+
+PUBLIC_BASHRC="$PERSONAL_DIR"/config/public/dot-bashrc
+if [ -f  "$PUBLIC_BASHRC" ]; then
+    source "$PUBLIC_BASHRC"
+fi
+unset PUBLIC_BASHRC

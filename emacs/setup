@@ -1,0 +1,20 @@
+#! /bin/bash
+
+set -euo pipefail
+
+: ${PERSONAL_DIR:?PERSONAL_DIR is not set}
+cd "$PERSONAL_DIR/emacs"
+
+# clone public repo
+
+if ! [ -d public ]; then
+    git clone https://github.com/nicolaspablo-gc/emacs public
+fi
+
+# symlink/bootstrap emacs
+
+emacsd=~/.config/emacs
+
+mkdir -p "$emacsd"
+ln -sf "$PWD"/init.el "$emacsd"
+ln -sf "$PWD"/early-init.el "$emacsd"
