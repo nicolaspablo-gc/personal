@@ -25,12 +25,16 @@
 ;;; Code:
 
 (defvar personal-log-file (concat personal-directory "docs/bitacora.org.gpg")
-  "File to add entries by `personal-add-log'.")
+  "File to add log entries.")
 
-(defun personal-add-log ()
-  "Add a log entry to `personal-log-file'."
-  (interactive)
-  (with-current-buffer (find-file-noselect personal-log-file)
+(defvar personal-agenda-file (concat personal-directory "docs/agenda.org.gpg")
+  "File to add agenda (scheduled) entries.")
+
+(defun personal-org-add-time-entry (file &optional current-date-time)
+  "Add a time entry at the end of org file FILE.
+Don't prompt for time and use current date+time when CURRENT-DATE-TIME
+is non-nil."
+  (with-current-buffer (find-file-noselect file)
     (set-input-method "spanish-prefix")
     (end-of-buffer)
     (insert
@@ -40,10 +44,22 @@
                ;; have the ability to show up in your agenda.  Its
                ;; very useful to see at a glance all the things you
                ;; did on x date.
-               (org-insert-time-stamp nil :with-hm))
+               (if current-date-time
+                   (org-insert-time-stamp nil :with-hm)
+                 (org-time-stamp t)))
              (read-string "Log: " nil nil nil t)))
     (org-set-tags-command)
     (save-buffer)))
+
+(defun personal-add-log (&optional prompt-date)
+  "Add a log entry to `personal-log-file'."
+  (interactive "P")                     ;
+  (personal-org-add-time-entry personal-log-file (not prompt-date)))
+
+(defun personal-add-agenda ()
+  "Add an agenda entry to `personal-agenda-file'"
+  (interactive)
+  (personal-org-add-time-entry personal-agenda-file))
 
 
 (provide 'personal-commands)

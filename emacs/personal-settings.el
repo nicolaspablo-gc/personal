@@ -30,6 +30,7 @@
 
   (add-to-list 'org-agenda-files (concat personal-docs-directory "tareas.org.gpg"))
   (add-to-list 'org-agenda-files (concat personal-docs-directory "bitacora.org.gpg"))
+  (add-to-list 'org-agenda-files (concat personal-docs-directory "agenda.org.gpg"))
 
   (with-eval-after-load 'my-bindings
     (add-to-list 'org-todo-keyword-faces '("en_espera" . my-org-cancel-face))

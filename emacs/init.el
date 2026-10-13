@@ -4,3 +4,4 @@
 (add-to-list 'load-path personal-emacs-directory)
 (require 'personal-defs)
 (require 'personal-settings)
+(require 'personal-commands)
