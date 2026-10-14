@@ -16,5 +16,6 @@ cd "$MY_MAIN_CONFIG_DIR"
 stow --dotfiles --no-folding --target="$HOME" --ignore=^dot-bashrc --ignore=^dot-profile .
 
 cd "$MY_PERSONAL_CONFIG_DIR"
-stow --dotfiles --no-folding --target="$HOME" --ignore=^.password-store .
+stow --dotfiles --no-folding --target="$HOME" \
+     --ignore=^dot-password-store .
 ln -sf "$MY_PERSONAL_CONFIG_DIR/dot-password-store" "$HOME/.password-store"

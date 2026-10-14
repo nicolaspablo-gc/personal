@@ -28,45 +28,43 @@
 
 ;;;; Variables
 
-(setq telega-use-docker t)
 (setq native-comp-jit-compilation-deny-list '("/lisp/org/"))
+(setq telega-use-docker t)
 
 (setq tab-bar-icons-alist
       (cond ((display-graphic-p)
-             (alist
-              "personal" "🐌"
-              "books" "📚"
-              "cc" "💺"
-              "nbox" "🔌"
-              "onedrive" "☁️"
-              "ytb" "▶️"
-              "bible" "📖"
-              "krp" "📋"
-              "emacs" "🐃"
-              "not[ae]s" "🗒️"
-              "ford" "🚐"
-              "nico" "🐌"
-              "nyquist" "🌝"
-              "paneles" "📊"
-              "crea-scripts\\|cscripts" "🔨"
-              "chat\\|telega\\|fran" "🗨️"
-              "maslow" "👥"
-              "gauss" "📐"
-              "ediff" "🔛"
-              "scv" "🛸"
-              "sessions" "🛸"
-              "nexus" "🌀"
-              "unshared" "🔒"
-              "ssh" "💻"
-              "wiki" "📚"
-              "kepler" "📊"
-              "crea" "💡"
-              "conf\\|cfg" "⚙️"))
+             (alist "personal" "🐌"
+                    "books" "📚"
+                    "cc" "💺"
+                    "nbox" "🔌"
+                    "onedrive" "☁️"
+                    "ytb" "▶️"
+                    "bible" "📖"
+                    "krp" "📋"
+                    "emacs" "🐃"
+                    "not[ae]s" "🗒️"
+                    "ford" "🚐"
+                    "nico" "🐌"
+                    "nyquist" "🌝"
+                    "paneles" "📊"
+                    "crea-scripts\\|cscripts" "🔨"
+                    "chat\\|telega\\|fran" "🗨️"
+                    "maslow" "👥"
+                    "gauss" "📐"
+                    "ediff" "🔛"
+                    "scv" "🛸"
+                    "sessions" "🛸"
+                    "nexus" "🌀"
+                    "unshared" "🔒"
+                    "ssh" "💻"
+                    "wiki" "📚"
+                    "kepler" "📊"
+                    "crea" "💡"
+                    "conf\\|cfg" "⚙️"))
             (t
-             (alist
-              "emacs" "w"
-              "chat" "*"
-              ".*" "T"))))
+             (alist "emacs" "w"
+                    "chat" "*"
+                    ".*" "T"))))
 
 (setq org-agenda-files
       (mapcar (lambda (file) (concat personal-docs-directory file))
@@ -86,11 +84,6 @@
 ;;;; Hooks
 
 (with-eval-after-load 'org
-
-  (add-to-list 'org-agenda-files (concat personal-docs-directory ))
-  (add-to-list 'org-agenda-files (concat personal-docs-directory ))
-  (add-to-list 'org-agenda-files (concat personal-docs-directory ))
-
   (with-eval-after-load 'my-bindings
     (add-to-list 'org-todo-keyword-faces '("EN_ESPERA" . my-org-cancel-face))
     (add-to-list 'org-todo-keyword-faces '("BLOQUEADO" . ORG-todo))
@@ -98,6 +91,19 @@
     (add-to-list 'org-todo-keyword-faces '("EN__CURSO" . org-done))
     (add-to-list 'org-todo-keyword-faces '("TERMINADO" . my-org-cancel-face))
     (add-to-list 'org-todo-keyword-faces '("CANCELADO" . my-org-cancel-face))))
+
+(with-eval-after-load 'org-agenda
+  (when (package-installed-p 'org-gcal)
+    (let ((credentials (car (auth-source-search :host "org-gcal" :max 1))))
+      (when credentials
+        (setq org-gcal-client-id (plist-get credentials :client-id)
+              org-gcal-client-secret (plist-get credentials :client-secret)
+              org-gcal-fetch-file-alist (alist "nicolaspablo.gc@gmail.com" personal-agenda-file))
+        (require 'org-gcal)))))
+
+;;;; Lists
+
+(add-to-list 'auto-mode-alist '("/dot-authinfo.gpg\\'" . authinfo-mode))
 
 (provide 'personal-settings)
 ;;; personal-settings.el ends here
