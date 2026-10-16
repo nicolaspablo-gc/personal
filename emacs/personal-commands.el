@@ -50,10 +50,18 @@ inactive one."
     (read-string prompt nil nil nil t)))
 
 (defmacro personal--with-file (file &rest forms)
-  "Execute FORMS within FILE's buffer."
+  "Execute FORMS within FILE's buffer, saving the result."
   (declare (indent defun))
   `(with-current-buffer (find-file-noselect ,file)
-     ,@forms))
+     ,@forms
+     (save-buffer)))
+
+(defun personal--update-agenda-buffers ()
+  "Update all org agenda buffers."
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (derived-mode-p 'org-agenda-mode)
+        (org-agenda-redo-all)))))
 
 (defun personal-add-log (&optional prompt-date)
   "Add a log entry to `personal-log-file'."
@@ -64,20 +72,21 @@ inactive one."
      (format "* %s %s\n"
              (personal--time-stamp prompt-date)
              (personal--read-string "Log: ")))
-    (org-set-tags-command)
-    (save-buffer)))
-
-;; (defun personal-add-agenda-entry ()
-;;   "Add an agenda entry to `personal-agenda-file'"
-;;   (interactive)
-;;   (personal-org-add-time-entry personal-agenda-file))
+    (org-set-tags-command))
+  (personal--update-agenda-buffers))
 
 (defun personal-add-task ()
   (interactive)
   (personal--with-file personal-tasks-file
     (end-of-buffer)
-    (insert
-     (format "* HACER %s\n" (personal--read-string "Task: ")))))
+    (insert (format "\n* HACER %s %s"
+                    (personal--time-stamp nil t)
+                    (personal--read-string "Tarea: ")))
+    (org-set-tags-command)
+    (org-set-property "CATEGORY" nil)
+    (end-of-buffer)
+    (insert "\n\n"))
+  (personal--update-agenda-buffers))
 
 (defun personal-project-list ()
   "List of personal projects."

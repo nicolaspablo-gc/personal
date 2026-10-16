@@ -70,15 +70,16 @@
       (mapcar (lambda (file) (concat personal-docs-directory file))
               '("agenda.org.gpg"
                 "bitacora.org.gpg"
-                "compras.org.gpg"
-                "proyectos.org.gpg"
                 "tareas.org.gpg")))
 
 (setq org-agenda-category-icon-alist
       (seq-map (lambda (pair) (list (car pair) `(display ,(cdr pair))))
                (alist "crea" "💡"
                       "compra" "🛍️"
+                      "salud" "🫀"
+                      "hobby" "🌝"
                       "proyecto" "📔"
+                      "gatos" "🐱"
                       ".*" "📋")))
 
 ;;;; Hooks
