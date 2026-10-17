@@ -8,3 +8,6 @@
 (require 'personal-defs)
 (require 'personal-settings)
 (require 'personal-commands)
+
+(when (file-exists-p "~/crea/crea.el")
+  (load "~/crea/crea.el"))

@@ -1,0 +1,73 @@
+#! /bin/bash
+
+# Sync my personal repos.
+# WIP
+
+set -euo pipefail
+
+: ${MY_PERSONAL_DIR:?MY_PERSONAL_DIR is not set!}
+: ${MY_MAIN_EMACS_DIR:?MY_MAIN_EMACS_DIR is not set!}
+: ${MY_MAIN_CONFIG_DIR:?MY_MAIN_CONFIG_DIR is not set!}
+
+git_repos=(
+    "$MY_PERSONAL_DIR"
+    "$MY_MAIN_EMACS_DIR"
+    "$MY_MAIN_CONFIG_DIR"
+)
+
+for repo in "${git_repos[@]}"; do
+    name=$(basename "$repo")
+    view() {
+        clear
+        echo "-------------  $name  -------------"
+        echo
+    }
+
+    cd "$repo"
+
+    view
+    echo "Pondering..."
+
+    while [ -n "$(git status --porcelain)" ]; do
+        view
+        echo -e "Unclean work tree.\n\ngit: "
+        git status --porcelain
+
+
+        echo -e "\nAction: "
+        echo "d) diff        c) auto_commit    a) auto_amend"
+        echo "m) magit       b) bash           q) quit"
+        echo "n) next repo"
+
+        echo
+        read -r -n 1 -p "Choice: " key
+        echo
+        case $key in
+            d) git diff --color=always | less;;
+            c) git add . && git commit -m 'update' >/dev/null;;
+            m) emacsclient -c --eval '(my-x-magit-from-cli)' ;;
+            a) git add . && git commit --amend --no-edit >/dev/null;;
+            b) bash ;;
+            q) exit ;;
+            n) continue 2;;
+            *) echo "Invalid choice: $key"; sleep 1;;
+        esac
+    done
+
+    echo
+
+    git pull --rebase >/dev/null
+
+    unpushed=$(git rev-list --count @{upstream}..HEAD)
+    if [ "$unpushed" -gt 0 ]; then
+        view
+        read -r -n1 -p "'$name' has $unpushed unpushed commits.  Push now? [Y/n]: " answer
+        case ${answer:-y} in
+            [Yy]*) git push ;;
+            *) echo "Not pushed." ;;
+        esac
+    fi
+done
+
+clear
+echo "Done"

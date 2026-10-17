@@ -34,6 +34,7 @@
 (setq tab-bar-icons-alist
       (cond ((display-graphic-p)
              (alist "personal" "🐌"
+                    "agenda" "🗓️"
                     "books" "📚"
                     "cc" "💺"
                     "nbox" "🔌"
